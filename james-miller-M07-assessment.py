@@ -5,6 +5,8 @@ from bs4 import BeautifulSoup
 import requests
 from dataclasses import dataclass
 
+holidays_dict = {}
+
 
 # # -------------------------------------------
 # # Modify the holiday class to 
@@ -52,47 +54,50 @@ from dataclasses import dataclass
 #     def save_to_json(filelocation):
 #         # Write out json file to selected file.
         
-#     def scrapeHolidays():
-#         # Scrape Holidays from https://www.timeanddate.com/holidays/us/ 
-#         # Remember, 2 previous years, current year, and 2  years into the future. You can scrape multiple years by adding year to the timeanddate URL. For example https://www.timeanddate.com/holidays/us/2022
-#         # Check to see if name and date of holiday is in innerHolidays array
-#         # Add non-duplicates to innerHolidays
-#         # Handle any exceptions. 
+def scrapeHolidays(year):
+    # Scrape Holidays from https://www.timeanddate.com/holidays/us/ 
+    # Remember, 2 previous years, current year, and 2  years into the future. You can scrape multiple years by adding year to the timeanddate URL. For example https://www.timeanddate.com/holidays/us/2022
+    # Check to see if name and date of holiday is in innerHolidays array
+    # Add non-duplicates to innerHolidays
+    # Handle any exceptions. 
 
-def getHTML(url):
-    response = requests.get(url)
-    return response.text
+    def getHTML(url):
+        response = requests.get(url)
+        return response.text
 
-year = 2022
-html = getHTML("https://www.timeanddate.com/holidays/us/%s?hol=33554809" % (year))
-soup = BeautifulSoup(html,'html.parser')
+    # year = 2022
+    # print("https://www.timeanddate.com/holidays/us/%s?hol=33554809" % (year))
+    # html = getHTML("https://www.timeanddate.com/holidays/us/%s?hol=33554809" % (year))
+    html = getHTML("https://www.timeanddate.com/holidays/us/2022?hol=33554809")
+    soup = BeautifulSoup(html,'html.parser')
 
-table = soup.find('tbody').find_all('tr')
-# print(list(table))
-holidays = []
+    table = soup.find('tbody').find_all('tr')
+    # print(list(table))
+    holidays = []
 
-for row in table:
-    holiday = {}
-    # title = row.find('img')
-    if row.find('th') is not None:
-        # print(row.find('th').text)
-        holiday['date'] = row.find('th').text
-    if row.find('a') is not None:
-        # print(row.find('a').text)
-        holiday['name'] = row.find('a').text
-    # print([holiday['date'], holiday['name']])
-    # print(row.find(class_ = 'star-rating')["class"][1])
-    holidays.append(holiday)
+    for row in table:
+        holiday = {}
+        # title = row.find('img')
+        if row.find('th') is not None:
+            # print(row.find('th').text)
+            holiday['date'] = row.find('th').text
+        if row.find('a') is not None:
+            # print(row.find('a').text)
+            holiday['name'] = row.find('a').text
+        # print([holiday['date'], holiday['name']])
+        # print(row.find(class_ = 'star-rating')["class"][1])
+        holidays.append(holiday)
 
-for holiday in holidays:
-    if holiday == {}:
-        holidays.remove(holiday)
-jholidays = {'holidays': holidays}
+    for holiday in holidays:
+        if holiday == {}:
+            holidays.remove(holiday)
+    # jholidays = {'%s holidays' % year: holidays}
 
-test_file = open('json_file.json', 'w')
-json.dump(jholidays, test_file, indent = 4)
-test_file.close()
-# print(list(holidays))
+    # test_file = open('json_file.json', 'w')
+    # json.dump(jholidays, test_file, indent = 4)
+    # test_file.close()
+    # print(list(holidays))
+    return holidays
 
 #     def numHolidays():
 #         # Return the total number of holidays in innerHolidays
@@ -124,38 +129,45 @@ test_file.close()
 
 
 
-# def main():
-#     # Large Pseudo Code steps
-#     # -------------------------------------
-#     # 1. Initialize HolidayList Object
-#     # 2. Load JSON file via HolidayList read_json function
-#     # 3. Scrape additional holidays using your HolidayList scrapeHolidays function.
-#     # 3. Create while loop for user to keep adding or working with the Calender
-#     # 4. Display User Menu (Print the menu)
-#     # 5. Take user input for their action based on Menu and check the user input for errors
-#     # 6. Run appropriate method from the HolidayList object depending on what the user input is
-#     # 7. Ask the User if they would like to Continue, if not, end the while loop, ending the program.  If they do wish to continue, keep the program going. 
+def main():
+    # Large Pseudo Code steps
+    # -------------------------------------
+    # 1. Initialize HolidayList Object
+    # 2. Load JSON file via HolidayList read_json function
+    # 3. Scrape additional holidays using your HolidayList scrapeHolidays function.
+    # 3. Create while loop for user to keep adding or working with the Calender
+    # 4. Display User Menu (Print the menu)
+    # 5. Take user input for their action based on Menu and check the user input for errors
+    # 6. Run appropriate method from the HolidayList object depending on what the user input is
+    # 7. Ask the User if they would like to Continue, if not, end the while loop, ending the program.  If they do wish to continue, keep the program going. 
+    for i in range(2020, 2025):
+        year = i
+        jholidays = scrapeHolidays(year)
+        holidays_dict["%s holidays" % (year)] = jholidays
+    # print(holidays_dict)
+    test_file = open('json_file.json', 'w')
+    json.dump(holidays_dict, test_file, indent = 4)
+    test_file.close()
+
+if __name__ == "__main__":
+    main();
 
 
-# if __name__ == "__main__":
-#     main();
-
-
-# # Additional Hints:
-# # ---------------------------------------------
-# # You may need additional helper functions both in and out of the classes, add functions as you need to.
-# #
-# # No one function should be more then 50 lines of code, if you need more then 50 lines of code
-# # excluding comments, break the function into multiple functions.
-# #
-# # You can store your raw menu text, and other blocks of texts as raw text files 
-# # and use placeholder values with the format option.
-# # Example:
-# # In the file test.txt is "My name is {fname}, I'm {age}"
-# # Then you later can read the file into a string "filetxt"
-# # and substitute the placeholders 
-# # for example: filetxt.format(fname = "John", age = 36)
-# # This will make your code far more readable, by seperating text from code.
+# Additional Hints:
+# ---------------------------------------------
+# You may need additional helper functions both in and out of the classes, add functions as you need to.
+#
+# No one function should be more then 50 lines of code, if you need more then 50 lines of code
+# excluding comments, break the function into multiple functions.
+#
+# You can store your raw menu text, and other blocks of texts as raw text files 
+# and use placeholder values with the format option.
+# Example:
+# In the file test.txt is "My name is {fname}, I'm {age}"
+# Then you later can read the file into a string "filetxt"
+# and substitute the placeholders 
+# for example: filetxt.format(fname = "John", age = 36)
+# This will make your code far more readable, by seperating text from code.
 
 
 
