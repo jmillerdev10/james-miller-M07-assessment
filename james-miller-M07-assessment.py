@@ -1,3 +1,4 @@
+from calendar import week
 import datetime
 import json
 from attr import attrs
@@ -139,13 +140,40 @@ class HolidayList:
 #         # Output formated holidays in the week. 
 #         # * Remember to use the holiday __str__ method.
 
-    def getWeather(weekNum): 
+    def getWeather(weekNum):
+        weather_range = range(weekNum, 8) 
         # Convert weekNum to range between two days
         # Use Try / Except to catch problems
         # Query API for weather in that week range
         # Format weather information and return weather string.
         response = requests.request("GET", weatherurl, headers=headers, params=querystring)    
-        print(response.text)
+        # print(response.text)
+        raw_weather = response.text
+        weather_list = json.loads(raw_weather)
+        # print("weather_list is: ")
+        # print(weather_list['list'][0]['dt'])
+        weekly_forecast = []
+        for day in weather_list['list']:
+            # for city in day:
+            #     print(city)
+            # print("day is: ")
+            # print(day)
+
+            epochTime = day['dt'] # "How do I get this from the API?"
+            forecast = day['weather'][0]['main']
+            # print('epochTime is: ')
+            # print(epochTime)
+            weather_date = datetime.datetime.fromtimestamp(epochTime).strftime('%Y-%m-%d')
+            # print('formated date is: ')
+            # print(weather_date)
+            # print('forecast is: ')
+            # print(forecast)                        
+            weekly_forecast.append([weather_date, forecast])
+        # print('Your weekly forecast: ')
+        # print(weekly_forecast)
+        # print(weather_list['list'])
+
+        return weekly_forecast
         
 
 #     def viewCurrentWeek():
@@ -170,11 +198,14 @@ def main():
     # 5. Take user input for their action based on Menu and check the user input for errors
     # 6. Run appropriate method from the HolidayList object depending on what the user input is
     # 7. Ask the User if they would like to Continue, if not, end the while loop, ending the program.  If they do wish to continue, keep the program going. 
-    # booty = open(locdog)
-    # butt = json.load(booty)
-    # print(butt)
-    
-    print(holidays_dict)
+    holidays_dict = HolidayList.scrapeHolidays(2022)
+    weather_dict = HolidayList.getWeather(1)
+    print('Your weekly forecast: ')
+    print(weather_dict)
+    # print("holiday_dict: ")
+    # print(holidays_dict)
+    # print("\nweather_dict: ")
+    # print(weather_dict)
     # response = requests.get(apiurl, headers)
     # response = requests.request("GET", weatherurl, headers=headers, params=querystring)    
     # print(response.text)
