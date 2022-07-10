@@ -11,6 +11,7 @@ from config import querystring
 from config import headers
 
 holidays_dict = {}
+holidays_list = []
 
 
 # # -------------------------------------------
@@ -27,7 +28,7 @@ class Holiday:
     def __str__ (self):
         # String output
         # Holiday output when printed.
-        return self.name + " (" + self.date.strftime("%Y-%m-%d") + ")"
+        return self.name + " (" + self.date + ")" # might need to add something like the following to the end of self.date for formatting ".strftime("%Y-%m-%d")"
           
            
 # -------------------------------------------
@@ -38,17 +39,29 @@ class Holiday:
 @dataclass
 class HolidayList:
     innerHolidays: list
+    
 
+    # def __init__(self, holidayObj):
+    #     self.holidayObj = holidayObj
+    #     self.innerHolidays.append(holidayObj)
    
     def addHoliday(holidayObj):
+        global holidays_list
         # Make sure holidayObj is an Holiday Object by checking the type
         # Use innerHolidays.append(holidayObj) to add holiday
         # print to the user that you added a holiday
         print("addHoliday UNDER CONSTRUCTION")
         print("holidayObj type is:")
         print(type(holidayObj))
-        # HolidayList(innerHolidays).append(holidayObj) # not sure why it is not recognizing innerHolidays. Also tried HolidayList.innerHolidays, but that doesnt work either
+        print(holidayObj)
+        # print("innerHolidays is: ")
         # print(innerHolidays)
+        # HolidayList([holidayObj]) # not sure why it is not recognizing innerHolidays. Also tried HolidayList.innerHolidays, but that doesnt work either
+        # innerHolidays.append(holidayObj)
+        print(type(holidays_list))
+        holidays_list.innerHolidays.append(holidayObj)
+        print("HolidayList is: ")
+        print(holidays_list)
 
 #     def findHoliday(HolidayName, Date):
 #         # Find Holiday in innerHolidays
@@ -73,7 +86,9 @@ class HolidayList:
             holy_date_name = holy_date["name"]
             holy_date_date = holy_date["date"]
             holyobj = Holiday(holy_date_name, holy_date_date)
-            HolidayList.addHoliday(holyobj)
+            HolidayList(holyobj)
+            print("HOlidayList = ")
+            print(HolidayList)
         return file_dict
 
 #     def save_to_json(filelocation):
@@ -187,7 +202,7 @@ class HolidayList:
 
 
 def main():
-    global holidays_dict
+    global holidays_list
     # Large Pseudo Code steps
     # -------------------------------------
     # 1. Initialize HolidayList Object
@@ -198,10 +213,31 @@ def main():
     # 5. Take user input for their action based on Menu and check the user input for errors
     # 6. Run appropriate method from the HolidayList object depending on what the user input is
     # 7. Ask the User if they would like to Continue, if not, end the while loop, ending the program.  If they do wish to continue, keep the program going. 
-    holidays_dict = HolidayList.scrapeHolidays(2022)
-    weather_dict = HolidayList.getWeather(1)
+    holidays_list = HolidayList(HolidayList.scrapeHolidays(2022))
+    weather_dict = HolidayList(HolidayList.getWeather(1))
     print('Your weekly forecast: ')
     print(weather_dict)
+    # add_this = {'name': '', 'date': ''}
+    # print(add_this)
+    main_menu = input('\nHoliday Menu\n====================\n1. Add a Holiday\n2. Remove a Holiday\n3. Save Holiday List\n4. View Holidays\n5. Exit\n\n')
+    if main_menu == '1':
+        print("UNDER CONSTRUCTION")
+        print("\nAdd a Holiday\n====================\n")
+        hol_name = input("Holiday: ")
+        hol_date = input("Date: ")
+        add_this = {'name': hol_name, 'date': hol_date}
+        print(add_this)
+        HolidayList.addHoliday(add_this)
+        print("Success:\n%s has been added to the list" % (add_this))
+    elif main_menu == '2':
+        print("UNDER CONSTRUCTION")
+    elif main_menu == '3':
+        print("UNDER CONSTRUCTION")
+    elif main_menu == '4':
+        print("UNDER CONSTRUCTION")
+    else:
+        exit("\nExiting. See you next time!")
+
     # print("holiday_dict: ")
     # print(holidays_dict)
     # print("\nweather_dict: ")
