@@ -203,7 +203,8 @@ class HolidayList:
             day = startdate + timedelta(days=i)
             dates.append(day.strftime('%Y-%m-%d')) 
         print(dates)
-        # week = filter(lambda x: x = week_number)
+        week = filter(lambda x: x in dates, self.innerHolidays)
+        print(type(week))
         # for day in week:
 
         # holidays.append(holiday)
