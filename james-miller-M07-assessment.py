@@ -2,7 +2,7 @@ from datetime import datetime
 import json
 from bs4 import BeautifulSoup
 import requests
-from config import holidaysjson
+from config_miller import holidaysjson
 
 
 # The Holiday class defines Holiday objects to be used in the HolidayList class
@@ -83,7 +83,7 @@ class HolidayList:
         # Converts each Holiday object into a dictionary-like structure.
         # Adds the Holiday dictionary structures to a list, then adds that list to a dictionary
         # Converts the dictionary to json format and writes the json text to specified json file, 
-        #       which is stored in and imported from the config.py file.
+        #       which is stored in and imported from the config_miller.py file.
         saving_dict = {"holidays" : []}
         saving_holiday = {}
         
