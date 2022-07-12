@@ -1,5 +1,8 @@
-from datetime import datetime
+# import datetime
+from datetime import datetime, timedelta
 from datetime import time
+# from datetime import timedelta
+import time
 import json
 from bs4 import BeautifulSoup
 from hamcrest import instance_of
@@ -101,8 +104,6 @@ class HolidayList:
 
     def save_to_json(self, filelocation):
         # Write out json file to selected file.
-        print("You are in save_to_json. It doesn't work yet")
-        # Believe I need to put the holidays back in the format of the holidays.json file
         saving_dict = {"holidays" : []}
         saving_holiday = {}
         
@@ -192,15 +193,16 @@ class HolidayList:
         # Cast filter results as list
         # return your holidays
         holidays = []
-        print("You are in filter_holidays_by_week. It does not work yet")
+        print("You are in filter_holidays_by_week.\nIt will get you a list of dates for the week\nbut does not use the filter function, nor a lambda")
 
-        WEEK  = 20 - 2 # as it starts with 0 and you want week to start from sunday
-        startdate = time.asctime(time.strptime('%s %d 0' % (year, WEEK), '%Y %W %w')) 
-        startdate = datetime.datetime.strptime(startdate, '%a %b %d %H:%M:%S %Y') 
+        # WEEK  = 20 - 2 # as it starts with 0 and you want week to start from sunday
+        startdate = time.asctime(time.strptime('%s %d 0' % (int(year), int(week_number)-1), '%Y %W %w')) 
+        startdate = datetime.strptime(startdate, '%a %b %d %H:%M:%S %Y') 
         dates = [startdate.strftime('%Y-%m-%d')] 
         for i in range(1, 7): 
-            day = startdate + datetime.timedelta(days=i)
+            day = startdate + timedelta(days=i)
             dates.append(day.strftime('%Y-%m-%d')) 
+        print(dates)
         # week = filter(lambda x: x = week_number)
         # for day in week:
 
@@ -287,7 +289,6 @@ def main():
             # note sure if it will need to be in each of these if/elifs or if I can do it once outside of that
         elif main_menu == '2':
             # This is the Remove a Holiday option
-            print("This is not currently removing holidays...")
             holiday_name = input("Holiday Name: ")
             holiday_date = input("Holiday Date: ")
             hl.removeHoliday(holiday_name, holiday_date)
